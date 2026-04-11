@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Construminas - Catálogo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--az:#1C6DC0;--az2:#155EA8;--az3:#0E4F94;--lj:#F05A28;--lj2:#D04A1A;--lj3:#FFF0EB;--c1:#F2F5F9;--c2:#DDE3ED;--c3:#8A96AD;--tx:#162035;--vd:#1DB954;--vm:#E53935;--cart:#FF6B35}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{font-family:"Nunito",sans-serif;background:var(--c1);color:var(--tx);min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--az);position:sticky;top:0;z-index:100}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:11px 16px}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-ico{width:40px;height:40px;background:var(--lj);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
+.logo-ico svg{width:26px;height:26px}
+.logo-nm{font-size:21px;font-weight:900;color:#fff;line-height:1}
+.logo-nm span{color:var(--lj)}
+.logo-sb{font-size:10px;color:rgba(255,255,255,.55);font-weight:600;display:block;margin-top:1px}
+.hdr-btns{display:flex;align-items:center;gap:7px}
+
+/* BOTÃO CARRINHO */
+.btn-cart{position:relative;background:var(--cart);color:#fff;border:none;font-size:20px;width:42px;height:42px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:#fff;color:var(--cart);font-size:10px;font-weight:900;min-width:18px;height:18px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--cart)}
+.cart-badge.on{display:flex}
+
+.btn-adm{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);font-size:11px;font-weight:800;padding:5px 10px;border-radius:20px;cursor:pointer;font-family:"Nunito",sans-serif;display:none}
+.btn-sair{background:rgba(229,57,53,.25);color:#fff;border:1px solid rgba(229,57,53,.35);font-size:11px;font-weight:800;padding:5px 10px;border-radius:20px;cursor:pointer;font-family:"Nunito",sans-serif;display:none}
+.adm-bar{background:var(--az3);padding:5px 16px;display:none;align-items:center;justify-content:space-between}
+.adm-bar.on{display:flex}
+.adm-bar span{font-size:11px;color:rgba(255,255,255,.7);font-weight:700}
+.adm-bar strong{color:var(--lj)}
+.adm-bar button{background:none;border:none;color:rgba(255,255,255,.5);font-size:11px;cursor:pointer;font-family:"Nunito",sans-serif;font-weight:700}
+.hdr-srch{background:var(--az2);padding:8px 16px 10px}
+.srch{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:0 12px}
+.srch svg{width:14px;height:14px;flex-shrink:0}
+.srch input{background:none;border:none;outline:none;color:#fff;font-size:14px;font-family:"Nunito",sans-serif;padding:9px 0;flex:1}
+.srch input::placeholder{color:rgba(255,255,255,.4)}
+.hdr-stripe{height:4px;background:var(--lj)}
+.tabs{display:none;background:#fff;margin:12px 14px 0;border-radius:12px;border:1px solid var(--c2);overflow:hidden}
+.tabs.on{display:flex}
+.tab{flex:1;padding:11px 4px;font-size:11px;font-weight:800;font-family:"Nunito",sans-serif;border:none;background:none;color:var(--c3);cursor:pointer;text-transform:uppercase;letter-spacing:.4px}
+.tab.at{background:var(--az);color:#fff}
+.sec{display:none}.sec.on{display:block}
+.sec-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 6px}
+.sec-row h3{font-size:12px;font-weight:900;color:var(--az3);text-transform:uppercase;letter-spacing:.8px}
+.sec-row h3 b{color:var(--lj);font-weight:900}
+.sec-cnt{font-size:11px;color:var(--c3);background:var(--c2);padding:3px 10px;border-radius:20px;font-weight:800}
+.cats{overflow-x:auto;scrollbar-width:none;padding:0 14px 8px;white-space:nowrap}
+.cats::-webkit-scrollbar{display:none}
+.pill{display:inline-flex;align-items:center;gap:4px;background:#fff;color:var(--c3);border:1px solid var(--c2);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;cursor:pointer;margin-right:6px;font-family:"Nunito",sans-serif}
+.pill.at{background:var(--az);color:#fff;border-color:var(--az)}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px 16px}
+.card{background:#fff;border-radius:12px;border:1px solid var(--c2);overflow:hidden;cursor:pointer;transition:transform .14s;position:relative}
+.card:active{transform:scale(.96)}
+.card.incart{border:2px solid var(--cart)}
+.cart-indicator{position:absolute;top:6px;right:6px;background:var(--cart);color:#fff;font-size:9px;font-weight:900;padding:2px 7px;border-radius:10px;z-index:3;display:none}
+.cart-indicator.on{display:block}
+.thumb{height:90px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .ef{font-size:30px}
+.tp{background:#1C6DC0}.tr{background:#1A5EAA}.to{background:#2C3E6E}.tn{background:#5B4A2E}.tx{background:#374151}
+.dot{position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-radius:50%;border:2px solid rgba(255,255,255,.5);z-index:2}
+.dv{background:#1DB954}.dl{background:#F39C12}.ds{background:#3B82F6}.di{background:#E53935}
+.cbody{padding:8px 10px 10px}
+.ccat{font-size:9px;font-weight:800;color:var(--lj);text-transform:uppercase;letter-spacing:.4px}
+.ccod{font-size:9px;color:var(--c3);float:right;font-weight:600}
+.cnome{font-size:12px;font-weight:800;color:var(--tx);margin:3px 0 6px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.btn-addcart{background:var(--az);color:#fff;border:none;padding:7px;border-radius:7px;font-size:11px;font-weight:800;font-family:"Nunito",sans-serif;cursor:pointer;width:100%}
+.btn-addcart.added{background:var(--cart)}
+.btn-wpp-card{background:#25D366;color:#fff;border:none;padding:7px;border-radius:7px;font-size:11px;font-weight:800;font-family:"Nunito",sans-serif;cursor:pointer;width:100%}
+
+/* FORMULÁRIO ADMIN */
+.fblk{background:#fff;margin:12px 14px;border-radius:14px;border:1px solid var(--c2);overflow:hidden}
+.fhdr{background:var(--az);padding:13px 16px}
+.fhdr h3{font-size:13px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:.8px}
+.fbdy{padding:14px}
+.fl{margin-bottom:10px}
+.fl label{font-size:11px;font-weight:800;color:var(--az3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.fl input,.fl select,.fl textarea{width:100%;padding:9px 11px;font-size:13px;font-family:"Nunito",sans-serif;border:1.5px solid var(--c2);border-radius:9px;background:var(--c1);color:var(--tx);outline:none}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--az);background:#fff}
+.fl textarea{resize:vertical;min-height:60px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ÁREA DE 3 FOTOS */
+.fotos-label{font-size:11px;font-weight:800;color:var(--az3);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.fotos-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.foto-slot{border:2px dashed var(--c2);border-radius:10px;background:var(--c1);cursor:pointer;min-height:90px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.foto-slot img{width:100%;height:90px;object-fit:cover;display:none;border-radius:8px}
+.foto-slot-ph{display:flex;flex-direction:column;align-items:center;gap:4px}
+.foto-slot-ph span:first-child{font-size:24px}
+.foto-slot-ph span:last-child{font-size:9px;color:var(--c3);font-weight:700;text-align:center}
+.foto-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.foto-slot-rm{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:3;padding:0}
+.foto-slot.filled{border-color:var(--az)}
+
+.btnadd{width:100%;background:var(--lj);color:#fff;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:900;font-family:"Nunito",sans-serif;text-transform:uppercase;cursor:pointer;margin-top:4px}
+.btnadd:active{background:var(--lj2)}
+.fmsg{text-align:center;font-size:13px;font-weight:800;padding:7px;display:none}
+.fmsgok{color:var(--vd)}.fmsger{color:var(--vm)}
+
+/* PDF */
+.psec{padding:14px}
+.pcard{background:#fff;border-radius:14px;border:1px solid var(--c2);padding:14px;margin-bottom:12px}
+.pcard h3{font-size:12px;font-weight:900;color:var(--az3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.pitem{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--c2)}
+.pitem:last-child{border-bottom:none}
+.pthumb{width:36px;height:36px;border-radius:7px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px}
+.pthumb img{width:100%;height:100%;object-fit:cover}
+.pinfo{flex:1;min-width:0}
+.pnome{font-size:12px;font-weight:800;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcat2{font-size:10px;color:var(--c3);font-weight:600}
+.btnpdf{width:100%;background:var(--az);color:#fff;border:none;padding:14px;border-radius:12px;font-size:14px;font-weight:900;font-family:"Nunito",sans-serif;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px}
+.inst{background:var(--lj3);border:1px solid var(--lj);border-radius:12px;padding:13px}
+.inst h4{font-size:11px;font-weight:900;color:var(--lj2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.inst ol{padding-left:16px}
+.inst li{font-size:12px;color:#555;line-height:1.9;font-weight:600}
+.inst li strong{color:var(--az)}
+
+/* MODAL LOGIN */
+.lov{position:fixed;inset:0;background:rgba(14,79,148,.92);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.lov.on{display:flex}
+.lbox{background:#fff;border-radius:20px;padding:28px 22px;width:100%;max-width:320px}
+.llogo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px}
+.lico{width:42px;height:42px;background:var(--lj);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.lico svg{width:26px;height:26px}
+.lnm{font-size:20px;font-weight:900;color:var(--az)}
+.lnm span{color:var(--lj)}
+.ltit{font-size:13px;font-weight:900;color:var(--az3);text-align:center;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.lsub{font-size:12px;color:var(--c3);text-align:center;margin-bottom:18px;font-weight:600}
+.linput{width:100%;padding:12px 14px;font-size:18px;font-family:"Nunito",sans-serif;border:1.5px solid var(--c2);border-radius:10px;background:var(--c1);color:var(--tx);outline:none;text-align:center;letter-spacing:6px;margin-bottom:10px}
+.linput:focus{border-color:var(--az);background:#fff}
+.lbtn{width:100%;background:var(--lj);color:#fff;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:900;font-family:"Nunito",sans-serif;text-transform:uppercase;cursor:pointer}
+.lerr{color:var(--vm);font-size:12px;font-weight:800;text-align:center;padding:5px;display:none}
+.lcancel{width:100%;background:none;border:none;color:var(--c3);font-size:13px;font-weight:700;font-family:"Nunito",sans-serif;cursor:pointer;padding:10px;margin-top:4px}
+
+/* MODAL PRODUTO */
+.mov{position:fixed;inset:0;background:rgba(14,79,148,.72);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.mov.on{display:flex}
+.mbox{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;animation:up .25s ease}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhdl{width:38px;height:4px;background:var(--c2);border-radius:2px;margin:12px auto 0}
+
+/* Galeria de fotos no modal */
+.mfotos{position:relative;margin:12px 14px 0;border-radius:14px;overflow:hidden;height:200px;background:var(--az3)}
+.mfotos-track{display:flex;height:100%;transition:transform .3s ease}
+.mfotos-slide{min-width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:70px;flex-shrink:0;background:inherit}
+.mfotos-slide img{width:100%;height:100%;object-fit:cover}
+.mfotos-dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:5px}
+.mdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5)}
+.mdot.at{background:#fff}
+.mfotos-prev,.mfotos-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.mfotos-prev{left:8px}
+.mfotos-next{right:8px}
+.mfotos-prev.on,.mfotos-next.on{display:flex}
+
+.mef{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:20px;padding:5px 10px;font-size:10px;font-weight:800;font-family:"Nunito",sans-serif;cursor:pointer;display:none;align-items:center;gap:4px;z-index:2}
+.mef input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.mcont{padding:14px}
+.mcatrow{display:flex;align-items:center;justify-content:space-between}
+.mcat{font-size:10px;font-weight:900;color:var(--lj);text-transform:uppercase;letter-spacing:1px}
+.mcod{font-size:10px;color:var(--c3);font-weight:600}
+.mnome{font-size:20px;font-weight:900;color:var(--az3);line-height:1.15;margin:5px 0 6px}
+.mdesc{font-size:12px;color:#555;line-height:1.6;margin-bottom:12px}
+.mest{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;margin-bottom:16px}
+.mest .dd{width:8px;height:8px;border-radius:50%}
+.mpromo{display:inline-block;background:var(--lj3);color:var(--lj2);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;border:1px solid var(--lj);margin:0 0 12px}
+
+/* Botão adicionar ao carrinho no modal */
+.mbtn-cart{width:100%;background:var(--cart);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:900;font-family:"Nunito",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.mbtn-cart.added{background:#888}
+.mdel{width:100%;background:#FEE2E2;color:var(--vm);border:1px solid #FECACA;padding:10px;border-radius:12px;font-size:13px;font-family:"Nunito",sans-serif;font-weight:800;cursor:pointer;margin-bottom:8px;display:none}
+.mclose{width:100%;background:var(--c1);color:var(--c3);border:none;padding:11px;border-radius:12px;font-size:13px;font-family:"Nunito",sans-serif;font-weight:700;cursor:pointer}
+
+/* MODAL CARRINHO */
+.cov{position:fixed;inset:0;background:rgba(14,79,148,.72);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.cov.on{display:flex}
+.cbox{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;animation:up .25s ease}
+.cart-hdr{background:var(--cart);padding:16px;border-radius:22px 22px 0 0;display:flex;align-items:center;gap:10px}
+.cart-hdr h2{color:#fff;font-size:16px;font-weight:900;flex:1}
+.cart-hdr span{color:rgba(255,255,255,.8);font-size:13px;font-weight:700}
+.cart-body{padding:14px}
+.cart-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--c2)}
+.cart-item:last-child{border-bottom:none}
+.cart-item-thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
+.cart-item-thumb img{width:100%;height:100%;object-fit:cover}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-nome{font-size:13px;font-weight:800;color:var(--tx);line-height:1.3}
+.cart-item-cat{font-size:11px;color:var(--c3);font-weight:600;margin-top:2px}
+.cart-item-cod{font-size:10px;color:var(--az);font-weight:700}
+
+/* QTD */
+.qtd-ctrl{display:flex;align-items:center;gap:8px;margin-top:6px}
+.qtd-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--c2);background:#fff;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--az);flex-shrink:0}
+.qtd-val{font-size:15px;font-weight:900;color:var(--tx);min-width:24px;text-align:center}
+.cart-item-rm{background:none;border:none;color:var(--vm);font-size:18px;cursor:pointer;flex-shrink:0;padding:4px}
+
+.cart-empty{text-align:center;padding:40px 20px;color:var(--c3)}
+.cart-empty-ico{font-size:44px;display:block;margin-bottom:10px}
+.cart-empty p{font-size:14px;font-weight:700;line-height:1.6}
+
+.cart-footer{padding:14px;border-top:1px solid var(--c2);background:#fff;position:sticky;bottom:0}
+.cart-obs-label{font-size:11px;font-weight:800;color:var(--az3);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.cart-obs{width:100%;padding:10px 12px;font-size:13px;font-family:"Nunito",sans-serif;border:1.5px solid var(--c2);border-radius:9px;background:var(--c1);color:var(--tx);outline:none;resize:none;min-height:60px;margin-bottom:10px}
+.cart-obs:focus{border-color:var(--az);background:#fff}
+.btn-enviar-wpp{width:100%;background:#25D366;color:#fff;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:900;font-family:"Nunito",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+.btn-fechar-cart{width:100%;background:var(--c1);color:var(--c3);border:none;padding:11px;border-radius:12px;font-size:13px;font-family:"Nunito",sans-serif;font-weight:700;cursor:pointer}
+
+/* FOOTER */
+.footer{background:var(--az3);padding:20px 16px;margin-top:4px}
+.ftlogo{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ftico{width:32px;height:32px;background:var(--lj);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.ftico svg{width:20px;height:20px}
+.ftnm{font-size:17px;font-weight:900;color:#fff}
+.ftnm span{color:var(--lj)}
+.ftsb{font-size:10px;color:rgba(255,255,255,.5);font-weight:600;display:block}
+.footer p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.9}
+.ftdiv{height:1px;background:rgba(255,255,255,.08);margin:10px 0}
+.ftcopy{font-size:11px;color:rgba(255,255,255,.2);text-align:center}
+.empty{grid-column:1/-1;text-align:center;padding:38px 20px;color:var(--c3)}
+.emico{font-size:38px;display:block;margin-bottom:10px}
+.empty p{font-size:13px;line-height:1.6;font-weight:700}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--az3);color:#fff;padding:11px 20px;border-radius:30px;font-size:13px;font-weight:800;font-family:"Nunito",sans-serif;z-index:999;transition:transform .3s;white-space:nowrap;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+/* BARRA FLUTUANTE CARRINHO */
+.cart-float{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--cart);color:#fff;border:none;border-radius:30px;padding:13px 24px;font-size:14px;font-weight:900;font-family:"Nunito",sans-serif;cursor:pointer;display:flex;align-items:center;gap:10px;z-index:150;box-shadow:0 4px 20px rgba(255,107,53,.4);transition:transform .3s;white-space:nowrap}
+.cart-float.on{transform:translateX(-50%) translateY(0)}
+.cart-float-n{background:rgba(255,255,255,.25);border-radius:20px;padding:2px 10px;font-size:13px}
+
+/* FORMAS DE PAGAMENTO */
+.pgto-section{background:#fff;margin:0 14px 14px;border-radius:14px;border:1px solid var(--c2);overflow:hidden}
+.pgto-hdr{background:var(--az);padding:12px 16px;display:flex;align-items:center;gap:8px}
+.pgto-hdr h3{font-size:13px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:.8px}
+.pgto-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.pgto-item{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--c1);border-radius:12px;padding:14px 10px;border:1px solid var(--c2);text-align:center;gap:6px}
+.pgto-ico{font-size:28px}
+.pgto-nome{font-size:12px;font-weight:900;color:var(--az3);text-transform:uppercase;letter-spacing:.5px}
+.pgto-desc{font-size:11px;color:var(--c3);font-weight:600;line-height:1.4}
+.pgto-destaque{border:2px solid var(--vd);background:#F0FDF4}
+.pgto-destaque .pgto-nome{color:#166534}
+.pgto-parcelado{grid-column:1/-1;flex-direction:row;gap:12px;background:var(--lj3);border:2px solid var(--lj);padding:14px 16px}
+.pgto-parcelado .pgto-info{text-align:left}
+.pgto-parcelado .pgto-nome{color:var(--lj2)}
+.pgto-parcelado .pgto-desc{color:var(--lj2);opacity:.8}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">
+      <div class="logo-ico" id="logo-ico">
+        <svg viewBox="0 0 28 28" fill="none">
+          <rect x="2" y="2" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+          <rect x="16" y="2" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+          <rect x="2" y="16" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+          <path d="M18 26v-5h-4v5" fill="white"/>
+          <path d="M10 26h12V19l-6-5-6 5v7z" fill="white"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-nm">Constru<span>minas</span></div>
+        <span class="logo-sb">Construcao e Acabamento</span>
+      </div>
+    </div>
+    <div class="hdr-btns">
+      <button class="btn-cart" onclick="abrirCarrinho()" title="Carrinho">
+        🛒
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+      <button class="btn-adm" id="btn-adm" onclick="abrirLogin()">🔐</button>
+      <button class="btn-sair" id="btn-sair" onclick="sairAdmin()">Sair</button>
+    </div>
+  </div>
+  <div class="adm-bar" id="adm-bar">
+    <span>Modo <strong>Administrador</strong></span>
+    <button onclick="sairAdmin()">Sair</button>
+  </div>
+  <div class="hdr-srch">
+    <div class="srch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="11" cy="11" r="6"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+      </svg>
+      <input type="text" id="busca" placeholder="Buscar produto ou codigo..." oninput="render()">
+    </div>
+  </div>
+  <div class="hdr-stripe"></div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab at" onclick="showSec('catalogo',this)">Catalogo</button>
+  <button class="tab" onclick="showSec('cadastro',this)">Adicionar</button>
+  <button class="tab" onclick="showSec('pdf',this)">PDF</button>
+</div>
+
+<div class="sec on" id="sec-catalogo">
+  <div class="sec-row">
+    <h3>Produtos <b>Construminas</b></h3>
+    <span class="sec-cnt" id="cnt">0 itens</span>
+  </div>
+  <div class="cats" id="cats"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="sec" id="sec-cadastro">
+  <div class="fblk">
+    <div class="fhdr"><h3>Novo Produto</h3></div>
+    <div class="fbdy">
+      <span class="fotos-label">Fotos do produto (ate 3)</span>
+      <div class="fotos-grid">
+        <div class="foto-slot" id="fslot0">
+          <div class="foto-slot-ph"><span>📷</span><span>Foto 1</span></div>
+          <img id="fprev0" alt="">
+          <button class="foto-slot-rm" id="frm0" onclick="rmFotoSlot(0,event)">✕</button>
+          <input type="file" id="finput0" accept="image/*" onchange="onFotoSlot(0,event)">
+        </div>
+        <div class="foto-slot" id="fslot1">
+          <div class="foto-slot-ph"><span>📷</span><span>Foto 2</span></div>
+          <img id="fprev1" alt="">
+          <button class="foto-slot-rm" id="frm1" onclick="rmFotoSlot(1,event)">✕</button>
+          <input type="file" id="finput1" accept="image/*" onchange="onFotoSlot(1,event)">
+        </div>
+        <div class="foto-slot" id="fslot2">
+          <div class="foto-slot-ph"><span>📷</span><span>Foto 3</span></div>
+          <img id="fprev2" alt="">
+          <button class="foto-slot-rm" id="frm2" onclick="rmFotoSlot(2,event)">✕</button>
+          <input type="file" id="finput2" accept="image/*" onchange="onFotoSlot(2,event)">
+        </div>
+      </div>
+      <div class="fl"><label>Codigo</label><input type="text" id="fcod" placeholder="Ex: 21515"></div>
+      <div class="fl"><label>Nome *</label><input type="text" id="fnome" placeholder="Ex: Porcelanato 60x60"></div>
+      <div class="fr">
+        <div class="fl">
+          <label>Categoria *</label>
+          <select id="fcat">
+            <option value="">Selecione...</option>
+            <option value="Pisos">Pisos</option>
+            <option value="Revestimentos">Revestimentos</option>
+            <option value="Porcelanatos">Porcelanatos</option>
+            <option value="Nichos">Nichos</option>
+            <option value="Portas">Portas</option>
+            <option value="Tintas">Tintas</option>
+            <option value="Eletrico">Eletrico</option>
+            <option value="Cimento">Cimento</option>
+            <option value="Ferragens">Ferragens</option>
+            <option value="Madeiras">Madeiras</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+        <div class="fl">
+          <label>Unidade</label>
+          <select id="funid">
+            <option value="m2">m2</option>
+            <option value="un">Unidade</option>
+            <option value="m">Metro</option>
+            <option value="kg">Kg</option>
+            <option value="saco">Saco</option>
+            <option value="cx">Caixa</option>
+            <option value="lt">Litro</option>
+          </select>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fl">
+          <label>Estoque</label>
+          <select id="fest">
+            <option value="dv">Disponivel</option>
+            <option value="dl">Limitado</option>
+            <option value="ds">Encomenda</option>
+            <option value="di">Indisponivel</option>
+          </select>
+        </div>
+        <div class="fl"><label>Promocao</label><input type="text" id="fpromo" placeholder="Ex: Oferta"></div>
+      </div>
+      <div class="fl"><label>Descricao</label><textarea id="fdesc" placeholder="Medidas, marca, acabamento..."></textarea></div>
+      <button class="btnadd" onclick="salvar()">Adicionar ao catalogo</button>
+      <div class="fmsg fmsgok" id="mok">Produto adicionado!</div>
+      <div class="fmsg fmsger" id="mer">Preencha nome e categoria.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="sec-pdf">
+  <div class="psec">
+    <div class="pcard">
+      <h3>Previa do catalogo</h3>
+      <div id="pprev"></div>
+    </div>
+    <button class="btnpdf" id="bpdf" onclick="gerarPDF()">Baixar PDF do Catalogo</button>
+    <div class="inst">
+      <h4>Enviar pelo WhatsApp</h4>
+      <ol>
+        <li>Toque em <strong>Baixar PDF</strong></li>
+        <li>Abra o <strong>WhatsApp</strong></li>
+        <li>Clipe <strong>Documento</strong></li>
+        <li>Selecione <strong>catalogo_construminas.pdf</strong></li>
+        <li>Envie!</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+
+<!-- FORMAS DE PAGAMENTO -->
+<div class="pgto-section">
+  <div class="pgto-hdr">
+    <h3>💳 Formas de Pagamento</h3>
+  </div>
+  <div class="pgto-grid">
+    <div class="pgto-item pgto-destaque">
+      <span class="pgto-ico">💚</span>
+      <span class="pgto-nome">Pix</span>
+      <span class="pgto-desc">Pagamento instantâneo</span>
+    </div>
+    <div class="pgto-item pgto-destaque">
+      <span class="pgto-ico">💵</span>
+      <span class="pgto-nome">Dinheiro</span>
+      <span class="pgto-desc">Pagamento à vista</span>
+    </div>
+    <div class="pgto-item">
+      <span class="pgto-ico">💳</span>
+      <span class="pgto-nome">Débito</span>
+      <span class="pgto-desc">Todas as bandeiras</span>
+    </div>
+    <div class="pgto-item">
+      <span class="pgto-ico">💳</span>
+      <span class="pgto-nome">Crédito</span>
+      <span class="pgto-desc">Todas as bandeiras</span>
+    </div>
+    <div class="pgto-item pgto-parcelado">
+      <span class="pgto-ico">🎉</span>
+      <div class="pgto-info">
+        <div class="pgto-nome">Parcelamos em até 10x</div>
+        <div class="pgto-desc">Sem juros no cartão de crédito</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer">
+  <div class="ftlogo">
+    <div class="ftico">
+      <svg viewBox="0 0 28 28" fill="none">
+        <rect x="2" y="2" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+        <rect x="16" y="2" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+        <rect x="2" y="16" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+        <path d="M18 26v-5h-4v5" fill="white"/>
+        <path d="M10 26h12V19l-6-5-6 5v7z" fill="white"/>
+      </svg>
+    </div>
+    <div>
+      <div class="ftnm">Constru<span>minas</span></div>
+      <span class="ftsb">Construcao e Acabamento</span>
+    </div>
+  </div>
+  <p>Av. Gastao Demetrio Maia, 20 - Floramar<br>Belo Horizonte - MG, 31742-096<br>(31) 98349-7064</p>
+  <p style="margin-top:4px">Seg-Sex 08h-18h | Sab 08h-13h | Dom Fechado</p>
+  <div class="ftdiv"></div>
+  <div class="ftcopy">Catalogo digital Construminas - Precos sujeitos a alteracao</div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div class="mov" id="mov" onclick="fechaMov(event)">
+  <div class="mbox">
+    <div class="mhdl"></div>
+    <div class="mfotos" id="mfotos">
+      <div class="mfotos-track" id="mfotos-track"></div>
+      <div class="mfotos-dots" id="mfotos-dots"></div>
+      <button class="mfotos-prev" id="mfotos-prev" onclick="slideF(-1)">&#8249;</button>
+      <button class="mfotos-next" id="mfotos-next" onclick="slideF(1)">&#8250;</button>
+      <button class="mef" id="mef">Trocar foto<input type="file" accept="image/*" onchange="trocaFoto(event)"></button>
+    </div>
+    <div class="mcont">
+      <div class="mcatrow"><span class="mcat" id="mcat"></span><span class="mcod" id="mcod"></span></div>
+      <div class="mnome" id="mnome"></div>
+      <div class="mdesc" id="mdesc"></div>
+      <div class="mpromo" id="mpromo" style="display:none"></div>
+      <div class="mest" id="mest"></div>
+      <button class="mbtn-cart" id="mbtn-cart" onclick="toggleCart()">Adicionar ao Carrinho</button>
+      <button class="mwpp" id="mbtn-wpp-consulta" onclick="consultarWpp()">💬 Consultar pelo WhatsApp</button>
+      <button class="mdel" id="mdel" onclick="deletar()">Remover produto</button>
+      <button class="mclose" onclick="document.getElementById('mov').classList.remove('on')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CARRINHO -->
+<div class="cov" id="cov" onclick="fechaCov(event)">
+  <div class="cbox">
+    <div class="cart-hdr">
+      <h2>Meu Carrinho</h2>
+      <span id="cart-hdr-cnt">0 itens</span>
+    </div>
+    <div class="cart-body" id="cart-body"></div>
+    <div class="cart-footer">
+      <span class="cart-obs-label">Observacao (opcional)</span>
+      <textarea class="cart-obs" id="cart-obs" placeholder="Ex: Entregar na obra, preciso de orcamento..."></textarea>
+      <button class="btn-enviar-wpp" onclick="enviarWpp()">Enviar pedido pelo WhatsApp</button>
+      <button class="btn-fechar-cart" onclick="document.getElementById('cov').classList.remove('on')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- BARRA FLUTUANTE -->
+<button class="cart-float" id="cart-float" onclick="abrirCarrinho()">
+  🛒 Ver carrinho <span class="cart-float-n" id="cart-float-n">0</span>
+</button>
+
+<!-- MODAL LOGIN -->
+<div class="lov" id="lov">
+  <div class="lbox">
+    <div class="llogo">
+      <div class="lico">
+        <svg viewBox="0 0 28 28" fill="none">
+          <rect x="2" y="2" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+          <rect x="16" y="2" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+          <rect x="2" y="16" width="10" height="10" rx="2.5" fill="white" opacity="0.4"/>
+          <path d="M18 26v-5h-4v5" fill="white"/>
+          <path d="M10 26h12V19l-6-5-6 5v7z" fill="white"/>
+        </svg>
+      </div>
+      <div class="lnm">Constru<span>minas</span></div>
+    </div>
+    <div class="ltit">Area do Administrador</div>
+    <div class="lsub">Digite a senha para gerenciar</div>
+    <input class="linput" type="password" id="lsenha" placeholder="senha" onkeydown="if(event.key==='Enter')entrar()">
+    <div class="lerr" id="lerr">Senha incorreta.</div>
+    <button class="lbtn" onclick="entrar()">Entrar</button>
+    <button class="lcancel" onclick="fecharLogin()">Cancelar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SENHA = "37197033";
+var DADOS = [{"id": "592", "cod": "592", "nome": "Nicho Pequeno 30 Forti", "cat": "Nichos", "unidade": "un", "estoque": "disponivel", "promo": "", "desc": "", "foto": null}, {"id": "591", "cod": "591", "nome": "Nicho Pequeno 308790", "cat": "Nichos", "unidade": "un", "estoque": "disponivel", "promo": "", "desc": "", "foto": null}, {"id": "10335", "cod": "10335", "nome": "Piso 45x45 Clean Mate Plus Decoreli Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "21304", "cod": "21304", "nome": "Piso 45x45 Esset Gray Plus HD Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "21317", "cod": "21317", "nome": "Piso 45x45 Itamaraca A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "21366", "cod": "21366", "nome": "Piso 45x45 Orlando A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "21407", "cod": "21407", "nome": "Piso 45x45 Planeta Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "21365", "cod": "21365", "nome": "Piso 45x45 Rustic A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "20900", "cod": "20900", "nome": "Piso 50x50 Colinas HD Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,50m²", "foto": null}, {"id": "21531", "cod": "21531", "nome": "Piso 57x57 HD Bolt Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,59m²", "foto": null}, {"id": "21446", "cod": "21446", "nome": "Piso 57x57 HD Novita A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,59m²", "foto": null}, {"id": "2539", "cod": "2539", "nome": "Piso 57x57 HD Selena Bege Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,59m²", "foto": null}, {"id": "21489", "cod": "21489", "nome": "Piso 57x57 Melinda Fiorano Extra", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,59m²", "foto": null}, {"id": "20971", "cod": "20971", "nome": "Piso 57x57 HD Drito Bege Idealle", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,59m²", "foto": null}, {"id": "21387", "cod": "21387", "nome": "Piso 57x57 HD Drito Cinza Idealle", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,59m²", "foto": null}, {"id": "21602", "cod": "21602", "nome": "Piso 57x57 Viva Calacata Extra Ret", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,30m²", "foto": null}, {"id": "21601", "cod": "21601", "nome": "Piso 57x57 Viva Extra Retificado", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,30m²", "foto": null}, {"id": "21579", "cod": "21579", "nome": "Piso 60x120 Gran Venato Cinza Polido Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "10256", "cod": "10256", "nome": "Piso 60x120 Bella Gold Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "20895", "cod": "20895", "nome": "Piso 60x120 Calacata Bege Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21506", "cod": "21506", "nome": "Piso 60x120 San Pietro Black Mate Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21217", "cod": "21217", "nome": "Piso 60x120 Calacata Bege Mate Ret Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "2587", "cod": "2587", "nome": "Piso 60x120 Concreto Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21383", "cod": "21383", "nome": "Piso 60x120 Corten Polido Extra Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "2586", "cod": "2586", "nome": "Piso 60x120 Gran Calacata Blue Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21312", "cod": "21312", "nome": "Piso 60x120 Gran Carbono Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21394", "cod": "21394", "nome": "Piso 60x120 Gran Carvalho Natural Mate Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "20896", "cod": "20896", "nome": "Piso 60x120 Gran Decor Black Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21548", "cod": "21548", "nome": "Piso 60x120 Gran Lumini Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "20892", "cod": "20892", "nome": "Piso 60x120 Gran Nero Elevat Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21371", "cod": "21371", "nome": "Piso 60x120 Gran Sirius Gray Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "10048", "cod": "10048", "nome": "Piso 60x120 Gran Star Polido 3D Formigres PEI4 B", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,16m²", "foto": null}, {"id": "21508", "cod": "21508", "nome": "Piso 60x120 Navarro Mate Extra Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21578", "cod": "21578", "nome": "Piso 60x120 Persa Cinza Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "10200", "cod": "10200", "nome": "Piso 60x120 Santorini Polido Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "563", "cod": "563", "nome": "Piso 60x120 Solid Avela Mate Ret Formigres PEI4", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "2519", "cod": "2519", "nome": "Piso 60x120 Solid Concreto Mate Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21305", "cod": "21305", "nome": "Piso 60x120 Statuario Mate Extra Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21541", "cod": "21541", "nome": "Piso Gran Soberano Gray Ret Polido 60x120 Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "21542", "cod": "21542", "nome": "Piso Gran Superiore Silver Polido 60x120 Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,16m²", "foto": null}, {"id": "10392", "cod": "10392", "nome": "Piso 61x61 HD Pavia Plus Ret Fiorano Extra", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "10156", "cod": "10156", "nome": "Piso 61x61 Ret HD Novara Plus Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "20890", "cod": "20890", "nome": "Piso 61x61 Calacatta HD Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "21257", "cod": "21257", "nome": "Piso 61x61 Mazar Bege HD Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "2725", "cod": "2725", "nome": "Piso 61x61 Torino ES HD Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "10155", "cod": "10155", "nome": "Piso 61x61 HD Ret Volga Plus Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "2380", "cod": "2380", "nome": "Piso 61x61 HD Arquitek Plus Ret A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "2008", "cod": "2008", "nome": "Piso 61x61 HD Unique Plus Ret A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "21246", "cod": "21246", "nome": "Piso 61x61 HD Camerotta White Plus Ret Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "21445", "cod": "21445", "nome": "Piso 61x61 HD Garden Plus Ret Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "10157", "cod": "10157", "nome": "Piso 61x61 HD Vulcan Plus Ret Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "20983", "cod": "20983", "nome": "Piso 61x61 HD Ret Chicago Plus A Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "21463", "cod": "21463", "nome": "Piso 61x61 Moulin Plus Retif Extra Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "21230", "cod": "21230", "nome": "Piso Ceramico Laminum Mix Extra 61x61 HD Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,23m²", "foto": null}, {"id": "897", "cod": "897", "nome": "Piso 62x62 HD Asphalt Plus A1 Fiorano A", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21322", "cod": "21322", "nome": "Piso 62x62 HD Tuene Plus Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21333", "cod": "21333", "nome": "Piso 62x62 HD Garden Plus B Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B", "foto": null}, {"id": "21581", "cod": "21581", "nome": "Piso 66x66 Cacau Polido Extra Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,18m²", "foto": null}, {"id": "21329", "cod": "21329", "nome": "Piso 66x66 Calacata Polido Extra Ret Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,18m²", "foto": null}, {"id": "21577", "cod": "21577", "nome": "Piso 66x66 Milano Ret Polido Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,18m²", "foto": null}, {"id": "21519", "cod": "21519", "nome": "Piso 66x66 Onix Ice Ret Polido Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,18m²", "foto": null}, {"id": "21324", "cod": "21324", "nome": "Piso 66x66 Statuario Ret Polido Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,18m²", "foto": null}, {"id": "21617", "cod": "21617", "nome": "Piso 74x74 Sicilia Polido Cristalato Extra Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "20925", "cod": "20925", "nome": "Piso Baviera Polido Cristalato A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "2528", "cod": "2528", "nome": "Piso Bellavista Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "2531", "cod": "2531", "nome": "Piso Braga Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "10383", "cod": "10383", "nome": "Piso Breda Polido Cristalato A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "2378", "cod": "2378", "nome": "Piso Cassis Polido Cristalato A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "21331", "cod": "21331", "nome": "Piso Cassis Polido Cristalato B 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,20m²", "foto": null}, {"id": "19382", "cod": "19382", "nome": "Piso Friburgo Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "21339", "cod": "21339", "nome": "Piso Frost Polido Cristalato Extra 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "20972", "cod": "20972", "nome": "Piso Gales Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "21359", "cod": "21359", "nome": "Piso Georgia Polido Cristalato Extra A 74x74 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "10296", "cod": "10296", "nome": "Piso Incefra Speciale PHD71350R 74x74 Ret", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,19m²", "foto": null}, {"id": "10391", "cod": "10391", "nome": "Piso Lisboa Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "21666", "cod": "21666", "nome": "Piso Lisse Bege Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "2530", "cod": "2530", "nome": "Piso Lisse White Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "2379", "cod": "2379", "nome": "Piso Merano Polido Cristalato A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "21367", "cod": "21367", "nome": "Piso Montilla Polido Cristalato A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "2526", "cod": "2526", "nome": "Piso Venezia Cristal Polido A 74x74 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,20m²", "foto": null}, {"id": "10161", "cod": "10161", "nome": "Piso 75x75 HD Ret Iluminato Plus Acet Fiorano Extra", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "2591", "cod": "2591", "nome": "Piso 75x75 HD Ret Asphalt Plus Acet Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21363", "cod": "21363", "nome": "Piso 75x75 HD Ret Asphalt Plus Acet Fiorano B", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,25m²", "foto": null}, {"id": "2906", "cod": "2906", "nome": "Piso Bremen Acetinado A 75x75 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21341", "cod": "21341", "nome": "Piso Elemento Cinza Acetinado Extra 75x75 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21358", "cod": "21358", "nome": "Piso Piazza Acetinado A 75x75 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21515", "cod": "21515", "nome": "Piso Canela MR Retif Mate 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21509", "cod": "21509", "nome": "Piso Place BR Ret Polido 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21510", "cod": "21510", "nome": "Piso Araguaia Cinza Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "10334", "cod": "10334", "nome": "Piso Atenas Cinza Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21547", "cod": "21547", "nome": "Piso Avolio Cinza Polido Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21427", "cod": "21427", "nome": "Piso Branco Ret Polido 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "20968", "cod": "20968", "nome": "Piso Calacata Bianco Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "20898", "cod": "20898", "nome": "Piso Canela Cinza Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21512", "cod": "21512", "nome": "Piso Cleantec Gray Granilhado Ret 81x81 Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21511", "cod": "21511", "nome": "Piso Dallas Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "20928", "cod": "20928", "nome": "Piso Golden Lux Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21513", "cod": "21513", "nome": "Piso Golden Oro Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21507", "cod": "21507", "nome": "Piso Iluminato Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "10330", "cod": "10330", "nome": "Piso Iluminato Ret Polido 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21054", "cod": "21054", "nome": "Piso Mali Cinza Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21327", "cod": "21327", "nome": "Piso Marmo Blue Ret Mate 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "10331", "cod": "10331", "nome": "Piso Marmo Blue Ret Polido 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "10333", "cod": "10333", "nome": "Piso Messina Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21546", "cod": "21546", "nome": "Piso Michigan Claro Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "20899", "cod": "20899", "nome": "Piso Michigan Escuro Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "20967", "cod": "20967", "nome": "Piso Onix Cristal Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21514", "cod": "21514", "nome": "Piso Place BR Ret Mate 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21053", "cod": "21053", "nome": "Piso Travertini Bege Mate Ret 81x81 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,97m²", "foto": null}, {"id": "21325", "cod": "21325", "nome": "Piso 87x87 Ardosia Ret Polido Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,27m²", "foto": null}, {"id": "21326", "cod": "21326", "nome": "Piso 87x87 Dunas Ret Polido Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,27m²", "foto": null}, {"id": "21430", "cod": "21430", "nome": "Piso Arenito Cinza Mate Ret 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21518", "cod": "21518", "nome": "Piso Calacata Oro Ret Polido 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21314", "cod": "21314", "nome": "Piso Calacata Ouro Polido Ret 87x87 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,27m²", "foto": null}, {"id": "21429", "cod": "21429", "nome": "Piso Cedro Mate Ret 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21633", "cod": "21633", "nome": "Piso Modern Mate Ret 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21629", "cod": "21629", "nome": "Piso Rubi Cinza Mate Ret 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21431", "cod": "21431", "nome": "Piso Soberano Black Ret Polido 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21630", "cod": "21630", "nome": "Piso Travertino Cinza Mate Ret 88x88 Extra Formigres", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,32m²", "foto": null}, {"id": "21543", "cod": "21543", "nome": "Piso Albury 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21401", "cod": "21401", "nome": "Piso Amon Plus MRE Ret B 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21330", "cod": "21330", "nome": "Piso Constant Plus Ret A 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21397", "cod": "21397", "nome": "Piso Cracovia 90x90 Ret B Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21290", "cod": "21290", "nome": "Piso Cracovia 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21604", "cod": "21604", "nome": "Piso Dacito Plus MRE Ret B 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21488", "cod": "21488", "nome": "Piso Dacito Plus MRE Ret Extra 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21399", "cod": "21399", "nome": "Piso Dream Plus MRE Ret B 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21289", "cod": "21289", "nome": "Piso Fortunata 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21285", "cod": "21285", "nome": "Piso Livina 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21455", "cod": "21455", "nome": "Piso Misti Plus A 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21456", "cod": "21456", "nome": "Piso Panis Plus A 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21603", "cod": "21603", "nome": "Piso Panis Ret B 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21540", "cod": "21540", "nome": "Piso Paradiso 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21600", "cod": "21600", "nome": "Piso Pissis 90x90 Ret B Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21505", "cod": "21505", "nome": "Piso Pissis 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "20945", "cod": "20945", "nome": "Piso Porcia Acetinado A 90x90 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "10269", "cod": "10269", "nome": "Piso Porcia Acetinado B 90x90 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21247", "cod": "21247", "nome": "Piso Sidney Plus MRE Ret A 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21398", "cod": "21398", "nome": "Piso Sidney Plus MRE Ret B 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "21291", "cod": "21291", "nome": "Piso Solaria 90x90 Ret Extra Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,41m²", "foto": null}, {"id": "21402", "cod": "21402", "nome": "Piso Veneto Plus Ret B 90x90 Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,41m²", "foto": null}, {"id": "10183", "cod": "10183", "nome": "Piso Bray Park Wild Truffle 20x60 HD Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,70m²", "foto": null}, {"id": "21532", "cod": "21532", "nome": "Piso/Rev Acetinado Albury 56x100,6 Extra Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21535", "cod": "21535", "nome": "Piso/Rev Acetinado Amur Light 56x100,6 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21537", "cod": "21537", "nome": "Piso/Rev Acetinado Atrato 56x100,6 Extra Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21534", "cod": "21534", "nome": "Piso/Rev Acetinado Chicago 56x100,6 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21533", "cod": "21533", "nome": "Piso/Rev Acetinado Clarence 56x100,6 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21530", "cod": "21530", "nome": "Piso/Rev Acetinado Duouro 56x100,6 Extra Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "21536", "cod": "21536", "nome": "Piso/Rev Acetinado Valencia 56x100,6 Ret Fiorano", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "10177", "cod": "10177", "nome": "Piso Polido Inout Premium PHD56890R 54x109 Ret", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,74m²", "foto": null}, {"id": "10169", "cod": "10169", "nome": "Piso Polido Inout Premium PPI56960R 54x109 Ret", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,74m²", "foto": null}, {"id": "21516", "cod": "21516", "nome": "Piso Polido Inout Premium PPI57020R 54x109 Ret", "cat": "Pisos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,74m²", "foto": null}, {"id": "1992", "cod": "1992", "nome": "Porcelanato 61x120 Moby Platina Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,28m²", "foto": null}, {"id": "1651", "cod": "1651", "nome": "Porcelanato 70x70 Carrara Cristal Polido Ret Delta", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,96m²", "foto": null}, {"id": "2218", "cod": "2218", "nome": "Porcelanato 70x70 Marmo Douro Polido Ret Delta", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,44m²", "foto": null}, {"id": "21613", "cod": "21613", "nome": "Porcelanato 80x80 Calacata Nero Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,93m²", "foto": null}, {"id": "21615", "cod": "21615", "nome": "Porcelanato 81x81 Broadway Grey Acetinado Extra Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,64m²", "foto": null}, {"id": "21614", "cod": "21614", "nome": "Porcelanato 81x81 Broadway Ice Acetinado Extra Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,64m²", "foto": null}, {"id": "1758", "cod": "1758", "nome": "Porcelanato Broadway Dark Grey Granilhado 81x81 Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,64m²", "foto": null}, {"id": "1532", "cod": "1532", "nome": "Porcelanato Calacata Ouro PL80 A 80x80 Ret Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,93m²", "foto": null}, {"id": "1464", "cod": "1464", "nome": "Porcelanato Carrara Dream PL A Gaudi 60x60", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,80m²", "foto": null}, {"id": "21448", "cod": "21448", "nome": "Porcelanato Delta 84x84 Barcelona Plata Ret Polido B", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,80m²", "foto": null}, {"id": "21450", "cod": "21450", "nome": "Porcelanato Delta 84x84 Calacata Ice Acet Ret B", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,80m²", "foto": null}, {"id": "21447", "cod": "21447", "nome": "Porcelanato Delta 84x84 Pulpis Cinza Acet Ret A", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,80m²", "foto": null}, {"id": "21582", "cod": "21582", "nome": "Porcelanato Delta 84x84 Pulpis Cinza Polido Ret B", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,80m²", "foto": null}, {"id": "1995", "cod": "1995", "nome": "Porcelanato Dunne Grigio PL80 A 80x80 Ret Gaudi", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,93m²", "foto": null}, {"id": "1461", "cod": "1461", "nome": "Porcelanato Ecotech Carvalho AC A Gaudi 61x61", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,86m²", "foto": null}, {"id": "1993", "cod": "1993", "nome": "Porcelanato Noir PL A Gaudi 60x60", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,80m²", "foto": null}, {"id": "21046", "cod": "21046", "nome": "Porcelanato Ret Raggi Oro Acetinado A 90x180 Delta", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 3,24m²", "foto": null}, {"id": "21050", "cod": "21050", "nome": "Porcelanato Ret Raggi Oro Polido A 90x90 Delta Nova", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,43m²", "foto": null}, {"id": "21229", "cod": "21229", "nome": "Porcelanato Ret Romano Avena Acet A 90x90 Delta Nova", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,43m²", "foto": null}, {"id": "21052", "cod": "21052", "nome": "Porcelanato Ret Monier Argenta Polido A 90x90 Delta", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,43m²", "foto": null}, {"id": "21085", "cod": "21085", "nome": "Porcelanato Ret Obelisco Carbon-90 Granilhado A 90x90", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,43m²", "foto": null}, {"id": "21047", "cod": "21047", "nome": "Porcelanato Ret Ossido Natural Esmal A 90x180 Delta", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 3,24m²", "foto": null}, {"id": "21045", "cod": "21045", "nome": "Porcelanato Ret Val Dorcia Polido Esmal A 90x180", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 3,24m²", "foto": null}, {"id": "21048", "cod": "21048", "nome": "Porcelanato Ret Venato Grigio Esmal A 120x120 Delta", "cat": "Porcelanatos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,88m²", "foto": null}, {"id": "19226", "cod": "19226", "nome": "Revestimento 32x57 HD Panaro Bianco Fiorano Extra", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,03m²", "foto": null}, {"id": "2601", "cod": "2601", "nome": "Revestimento 32x57 HD Selena Bege Fiorano Extra", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,03m²", "foto": null}, {"id": "2602", "cod": "2602", "nome": "Revestimento 32x57 HD Selena Cinza Fiorano Extra", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,03m²", "foto": null}, {"id": "20919", "cod": "20919", "nome": "Revestimento 32x57 Alaska Extra Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,03m²", "foto": null}, {"id": "21098", "cod": "21098", "nome": "Revestimento 32x57 Branco Neve Idealle Extra", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,03m²", "foto": null}, {"id": "21035", "cod": "21035", "nome": "Revestimento 32x57 Versano Gray Fiorano A", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,03m²", "foto": null}, {"id": "21384", "cod": "21384", "nome": "Revestimento 33x59 Ret Taiko Marfim Formigres Acet", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,02m²", "foto": null}, {"id": "21386", "cod": "21386", "nome": "Revestimento 33x59 Ret Taiko Marrom Formigres Acet", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,02m²", "foto": null}, {"id": "21628", "cod": "21628", "nome": "Revestimento 35x72 Esmaltado Branco Ret Extra Viva", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,31m²", "foto": null}, {"id": "10265", "cod": "10265", "nome": "Revestimento 36x73 Venezia Ret Polido Fiorano B", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Produto B · Cx 2,10m²", "foto": null}, {"id": "10323", "cod": "10323", "nome": "Revestimento 36x73 Provo Bianco Ret Polido Fiorano A", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,10m²", "foto": null}, {"id": "20981", "cod": "20981", "nome": "Revestimento 37x74 Zurique Plus Ret HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "20979", "cod": "20979", "nome": "Revestimento 37x74 Ret Camerotta White Plus Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21462", "cod": "21462", "nome": "Revestimento 37x74 Ret Moulin Plus Extra Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "10264", "cod": "10264", "nome": "Revestimento 37x74 Ret Cagliare Beige Plus HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "10151", "cod": "10151", "nome": "Revestimento 37x74 Ret Cagliare Grigio Plus HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21042", "cod": "21042", "nome": "Revestimento 37x74 Ret Camerotta White Plus Fiorano A", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21539", "cod": "21539", "nome": "Revestimento 37x74 Ret Tarso Plus HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21321", "cod": "21321", "nome": "Revestimento 37x74 Ret Viseu Grigio Plus HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21036", "cod": "21036", "nome": "Revestimento 37x74 Menfi Bianco Plus Ret HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21404", "cod": "21404", "nome": "Revestimento 37x74 Niobium Plus Ret Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21031", "cod": "21031", "nome": "Revestimento 37x74 Berlim Plus Extra Ret Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "21000", "cod": "21000", "nome": "Revestimento 37x74 Ret Menfi Beige Plus HD Fiorano", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 1,95m²", "foto": null}, {"id": "10194", "cod": "10194", "nome": "Revestimento 38x75 Alaska Plus Fiorano Extra", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,00m²", "foto": null}, {"id": "2756", "cod": "2756", "nome": "Revestimento Bellavista Polido Cristalato 35x73 Ret", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,10m²", "foto": null}, {"id": "21283", "cod": "21283", "nome": "Revestimento Cristal Branco Neve Polido Ret Extra 35x73", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,10m²", "foto": null}, {"id": "21580", "cod": "21580", "nome": "Revestimento Cristal Oceane Soft Aveludado 56x100,6 Ret", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,25m²", "foto": null}, {"id": "2754", "cod": "2754", "nome": "Revestimento Lisse White Cristal Polido Extra 36x73 Ret", "cat": "Revestimentos", "unidade": "m²", "estoque": "disponivel", "promo": "", "desc": "Cx 2,10m²", "foto": null}];
+var P = JSON.parse(localStorage.getItem("cm10") || "null");
+if (!P || P.length === 0) {
+  P = JSON.parse(JSON.stringify(DADOS));
+  localStorage.setItem("cm10", JSON.stringify(P));
+}
+
+var adm = false;
+var catAt = "todos";
+var pAt = null;
+var fotos = [null, null, null];
+var carrinho = [];
+var slideAtual = 0;
+var fotosModa = [];
+
+var CICO = {
+  "Pisos":"🟦","Revestimentos":"🔷","Porcelanatos":"💎","Nichos":"🪞",
+  "Portas":"🚪","Tintas":"🎨","Eletrico":"⚡","Cimento":"🏗",
+  "Ferragens":"🔧","Madeiras":"🪵","Outros":"📦"
+};
+var CCLS = {
+  "Pisos":"tp","Revestimentos":"tr","Porcelanatos":"to","Nichos":"tn",
+  "Portas":"to","Tintas":"tp","Eletrico":"tx","Cimento":"tx",
+  "Ferragens":"tx","Madeiras":"tn","Outros":"tx"
+};
+var ECLR = {"dv":"#1DB954","dl":"#F39C12","ds":"#3B82F6","di":"#E53935"};
+var ELBL = {"dv":"Disponivel","dl":"Estoque limitado","ds":"Sob encomenda","di":"Indisponivel"};
+var CRGB = {
+  "Pisos":[28,109,192],"Revestimentos":[26,94,170],"Porcelanatos":[44,62,110],
+  "Nichos":[91,74,46],"Portas":[44,62,110],"Tintas":[240,90,40],
+  "Eletrico":[20,78,140],"Cimento":[74,85,104],"Ferragens":[45,55,72],
+  "Madeiras":[107,68,35],"Outros":[55,65,81]
+};
+
+function grav() { localStorage.setItem("cm10", JSON.stringify(P)); }
+
+function toast(m) {
+  var t = document.getElementById("toast");
+  t.textContent = m;
+  t.classList.add("on");
+  setTimeout(function() { t.classList.remove("on"); }, 2800);
+}
+
+/* LOGIN */
+var taps = 0, tapT = null;
+document.getElementById("logo-ico").addEventListener("click", function() {
+  taps++;
+  if (tapT) clearTimeout(tapT);
+  tapT = setTimeout(function() { taps = 0; }, 2000);
+  if (taps >= 5) { taps = 0; abrirLogin(); }
+});
+function abrirLogin() {
+  document.getElementById("lov").classList.add("on");
+  document.getElementById("lsenha").value = "";
+  document.getElementById("lerr").style.display = "none";
+  setTimeout(function() { document.getElementById("lsenha").focus(); }, 200);
+}
+function fecharLogin() { document.getElementById("lov").classList.remove("on"); }
+function entrar() {
+  if (document.getElementById("lsenha").value === SENHA) {
+    adm = true; fecharLogin();
+    document.getElementById("tabs").classList.add("on");
+    document.getElementById("adm-bar").classList.add("on");
+    document.getElementById("btn-adm").style.display = "none";
+    document.getElementById("btn-sair").style.display = "flex";
+    document.getElementById("mdel").style.display = "block";
+    document.getElementById("mef").style.display = "flex";
+    toast("Modo administrador ativado!");
+  } else {
+    document.getElementById("lerr").style.display = "block";
+    document.getElementById("lsenha").value = "";
+    document.getElementById("lsenha").focus();
+  }
+}
+function sairAdmin() {
+  adm = false;
+  document.getElementById("tabs").classList.remove("on");
+  document.getElementById("adm-bar").classList.remove("on");
+  document.getElementById("btn-adm").style.display = "flex";
+  document.getElementById("btn-sair").style.display = "none";
+  document.getElementById("mdel").style.display = "none";
+  document.getElementById("mef").style.display = "none";
+  showSec("catalogo", document.querySelector(".tab"));
+  toast("Modo administrador desativado.");
+}
+function showSec(id, btn) {
+  document.querySelectorAll(".sec").forEach(function(s) { s.classList.remove("on"); });
+  document.querySelectorAll(".tab").forEach(function(b) { b.classList.remove("at"); });
+  document.getElementById("sec-" + id).classList.add("on");
+  if (btn) btn.classList.add("at");
+  if (id === "pdf") renderPDF();
+}
+
+/* FOTOS 3 SLOTS */
+function onFotoSlot(idx, e) {
+  var f = e.target.files[0];
+  if (!f) return;
+  comprimir(f, function(b) {
+    fotos[idx] = b;
+    var img = document.getElementById("fprev" + idx);
+    img.src = b; img.style.display = "block";
+    document.getElementById("fslot" + idx).querySelector(".foto-slot-ph").style.display = "none";
+    document.getElementById("frm" + idx).style.display = "flex";
+    document.getElementById("fslot" + idx).classList.add("filled");
+  });
+}
+function rmFotoSlot(idx, e) {
+  e.stopPropagation();
+  fotos[idx] = null;
+  var img = document.getElementById("fprev" + idx);
+  img.style.display = "none"; img.src = "";
+  document.getElementById("fslot" + idx).querySelector(".foto-slot-ph").style.display = "flex";
+  document.getElementById("frm" + idx).style.display = "none";
+  document.getElementById("fslot" + idx).classList.remove("filled");
+  document.getElementById("finput" + idx).value = "";
+}
+
+function comprimir(f, cb) {
+  var r = new FileReader();
+  r.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var c = document.createElement("canvas"), MAX = 800;
+      var w = img.width, h = img.height;
+      if (w > h) { if (w > MAX) { h = h*(MAX/w); w = MAX; } }
+      else { if (h > MAX) { w = w*(MAX/h); h = MAX; } }
+      c.width = w; c.height = h;
+      c.getContext("2d").drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL("image/jpeg", 0.78));
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+
+/* TROCAR FOTO NO MODAL */
+function trocaFoto(e) {
+  var f = e.target.files[0];
+  if (!f || !pAt) return;
+  comprimir(f, function(b) {
+    if (!pAt.fotos) pAt.fotos = [null, null, null];
+    pAt.fotos[slideAtual] = b;
+    grav();
+    renderFotosModal(pAt);
+    render();
+    toast("Foto atualizada!");
+  });
+}
+
+/* SALVAR */
+function salvar() {
+  if (!adm) { toast("Acesso negado."); return; }
+  var nome = document.getElementById("fnome").value.trim();
+  var cat = document.getElementById("fcat").value;
+  document.getElementById("mok").style.display = "none";
+  document.getElementById("mer").style.display = "none";
+  if (!nome || !cat) { document.getElementById("mer").style.display = "block"; return; }
+  var fotosSalvas = fotos.filter(function(f) { return f !== null; });
+  P.push({
+    id: String(Date.now()),
+    cod: document.getElementById("fcod").value.trim(),
+    nome: nome, cat: cat,
+    unidade: document.getElementById("funid").value,
+    estoque: document.getElementById("fest").value,
+    promo: document.getElementById("fpromo").value.trim(),
+    desc: document.getElementById("fdesc").value.trim(),
+    fotos: [fotos[0], fotos[1], fotos[2]]
+  });
+  grav();
+  document.getElementById("fcod").value = "";
+  document.getElementById("fnome").value = "";
+  document.getElementById("fpromo").value = "";
+  document.getElementById("fdesc").value = "";
+  document.getElementById("fcat").value = "";
+  for (var i = 0; i < 3; i++) {
+    fotos[i] = null;
+    rmFotoSlot(i, { stopPropagation: function() {} });
+  }
+  document.getElementById("mok").style.display = "block";
+  setTimeout(function() { document.getElementById("mok").style.display = "none"; }, 2500);
+  render();
+  toast("Produto adicionado!");
+}
+
+/* RENDER GRID */
+function render() {
+  var busca = document.getElementById("busca").value.toLowerCase();
+  var lista = P.filter(function(p) {
+    return (catAt === "todos" || p.cat === catAt) &&
+           (!busca || p.nome.toLowerCase().indexOf(busca) > -1 ||
+            (p.cod && p.cod.indexOf(busca) > -1) ||
+            p.cat.toLowerCase().indexOf(busca) > -1);
+  });
+  document.getElementById("cnt").textContent = lista.length + (lista.length === 1 ? " item" : " itens");
+
+  var cats = [];
+  P.forEach(function(p) { if (cats.indexOf(p.cat) === -1) cats.push(p.cat); });
+  var cs = document.getElementById("cats");
+  cs.innerHTML = "";
+  var b0 = document.createElement("button");
+  b0.className = "pill" + (catAt === "todos" ? " at" : "");
+  b0.textContent = "Todos";
+  b0.onclick = function() { filtrar("todos", b0); };
+  cs.appendChild(b0);
+  cats.forEach(function(c) {
+    var b = document.createElement("button");
+    b.className = "pill" + (catAt === c ? " at" : "");
+    b.textContent = (CICO[c] || "") + " " + c;
+    b.onclick = function() { filtrar(c, b); };
+    cs.appendChild(b);
+  });
+
+  var g = document.getElementById("grid");
+  g.innerHTML = "";
+  if (!lista.length) {
+    var emp = document.createElement("div"); emp.className = "empty";
+    var ei = document.createElement("span"); ei.className = "emico";
+    ei.textContent = busca ? "🔍" : "📦";
+    var ep = document.createElement("p");
+    ep.textContent = busca ? "Nenhum produto encontrado." : "Nenhum produto cadastrado.";
+    emp.appendChild(ei); emp.appendChild(ep); g.appendChild(emp);
+    return;
+  }
+  lista.forEach(function(p) {
+    var noCart = carrinho.some(function(c) { return c.id === p.id; });
+    var d = document.createElement("div");
+    d.className = "card" + (noCart ? " incart" : "");
+
+    var footosProd = p.fotos && p.fotos.filter(function(f) { return f; });
+    var fotoThumb = footosProd && footosProd.length > 0 ? footosProd[0] : null;
+
+    var thDiv = document.createElement("div");
+    thDiv.className = "thumb" + (fotoThumb ? "" : " " + (CCLS[p.cat] || "tx"));
+    if (fotoThumb) {
+      var img = document.createElement("img"); img.src = fotoThumb; thDiv.appendChild(img);
+    } else {
+      var ef = document.createElement("span"); ef.className = "ef";
+      ef.textContent = CICO[p.cat] || "📦"; thDiv.appendChild(ef);
+    }
+    var dotDiv = document.createElement("div");
+    dotDiv.className = "dot " + (p.estoque || "dv");
+    thDiv.appendChild(dotDiv);
+
+    var ci = document.createElement("div");
+    ci.className = "cart-indicator" + (noCart ? " on" : "");
+    ci.textContent = "No carrinho";
+    thDiv.appendChild(ci);
+
+    var bodyDiv = document.createElement("div"); bodyDiv.className = "cbody";
+    var catSpan = document.createElement("span"); catSpan.className = "ccat";
+    catSpan.textContent = (CICO[p.cat] || "") + " " + p.cat;
+    bodyDiv.appendChild(catSpan);
+    if (p.cod) {
+      var codSpan = document.createElement("span"); codSpan.className = "ccod";
+      codSpan.textContent = p.cod; bodyDiv.appendChild(codSpan);
+    }
+    var nDiv = document.createElement("div"); nDiv.className = "cnome";
+    nDiv.textContent = p.nome; bodyDiv.appendChild(nDiv);
+
+    var btnsDiv = document.createElement("div");
+    btnsDiv.className = "card-btns";
+    var btnC = document.createElement("button");
+    btnC.className = "btn-addcart" + (noCart ? " added" : "");
+    btnC.textContent = noCart ? "✓ Carrinho" : "+ Carrinho";
+    btnC.onclick = function(ev) { ev.stopPropagation(); toggleCartProd(p); };
+    var btnW = document.createElement("button");
+    btnW.className = "btn-wpp-card";
+    btnW.textContent = "💬 WhatsApp";
+    btnW.onclick = function(ev) {
+      ev.stopPropagation();
+      var txt = "Ola Construminas! Gostaria de consultar o produto:\n\n*" + p.nome + "*";
+      if (p.cod) txt += "\nCod: " + p.cod;
+      txt += "\nCategoria: " + p.cat;
+      txt += "\n\nPode me passar mais informacoes?";
+      window.open("https://wa.me/5531983497064?text=" + encodeURIComponent(txt), "_blank");
+    };
+    btnsDiv.appendChild(btnC);
+    btnsDiv.appendChild(btnW);
+    bodyDiv.appendChild(btnsDiv);
+
+    d.appendChild(thDiv); d.appendChild(bodyDiv);
+    d.onclick = function() { abrirProd(p); };
+    g.appendChild(d);
+  });
+}
+
+function filtrar(c, btn) {
+  catAt = c;
+  document.querySelectorAll(".pill").forEach(function(b) { b.classList.remove("at"); });
+  btn.classList.add("at"); render();
+}
+
+/* MODAL PRODUTO */
+function renderFotosModal(p) {
+  var track = document.getElementById("mfotos-track");
+  var dotsEl = document.getElementById("mfotos-dots");
+  var prev = document.getElementById("mfotos-prev");
+  var next = document.getElementById("mfotos-next");
+  track.innerHTML = ""; dotsEl.innerHTML = "";
+  fotosModa = (p.fotos || []).filter(function(f) { return f; });
+  document.getElementById("mfotos").className = "mfotos " + (CCLS[p.cat] || "tx");
+  if (fotosModa.length === 0) {
+    var sl = document.createElement("div");
+    sl.className = "mfotos-slide";
+    sl.textContent = CICO[p.cat] || "📦";
+    track.appendChild(sl);
+    prev.classList.remove("on"); next.classList.remove("on");
+  } else {
+    fotosModa.forEach(function(f) {
+      var sl = document.createElement("div"); sl.className = "mfotos-slide";
+      var img = document.createElement("img"); img.src = f; sl.appendChild(img);
+      track.appendChild(sl);
+      var dot = document.createElement("div"); dot.className = "mdot";
+      dotsEl.appendChild(dot);
+    });
+    if (fotosModa.length > 1) {
+      prev.classList.add("on"); next.classList.add("on");
+    } else {
+      prev.classList.remove("on"); next.classList.remove("on");
+    }
+  }
+  slideAtual = 0;
+  atualizarSlide();
+}
+
+function atualizarSlide() {
+  var track = document.getElementById("mfotos-track");
+  track.style.transform = "translateX(-" + (slideAtual * 100) + "%)";
+  var dots = document.querySelectorAll(".mdot");
+  dots.forEach(function(d, i) { d.className = "mdot" + (i === slideAtual ? " at" : ""); });
+}
+
+function slideF(dir) {
+  if (fotosModa.length <= 1) return;
+  slideAtual = (slideAtual + dir + fotosModa.length) % fotosModa.length;
+  atualizarSlide();
+}
+
+function abrirProd(p) {
+  pAt = p;
+  renderFotosModal(p);
+  document.getElementById("mcat").textContent = (CICO[p.cat] || "") + " " + p.cat;
+  document.getElementById("mcod").textContent = p.cod ? "Cod: " + p.cod : "";
+  document.getElementById("mnome").textContent = p.nome;
+  document.getElementById("mdesc").textContent = p.desc || "";
+  var pp = document.getElementById("mpromo");
+  if (p.promo) { pp.style.display = "inline-block"; pp.textContent = "Oferta: " + p.promo; }
+  else { pp.style.display = "none"; }
+  var ec = ECLR[p.estoque] || "#1DB954";
+  var mestDiv = document.getElementById("mest"); mestDiv.innerHTML = "";
+  var dd = document.createElement("div"); dd.className = "dd"; dd.style.background = ec;
+  var et = document.createElement("span"); et.style.color = ec; et.style.fontWeight = "700";
+  et.textContent = ELBL[p.estoque] || "Disponivel";
+  mestDiv.appendChild(dd); mestDiv.appendChild(et);
+  var noCart = carrinho.some(function(c) { return c.id === p.id; });
+  var mb = document.getElementById("mbtn-cart");
+  mb.textContent = noCart ? "Remover do Carrinho" : "Adicionar ao Carrinho";
+  mb.className = "mbtn-cart" + (noCart ? " added" : "");
+  document.getElementById("mdel").style.display = adm ? "block" : "none";
+  document.getElementById("mef").style.display = adm ? "flex" : "none";
+  document.getElementById("mov").classList.add("on");
+}
+
+function fechaMov(e) {
+  if (e.target === document.getElementById("mov")) document.getElementById("mov").classList.remove("on");
+}
+
+function consultarWpp() {
+  if (!pAt) return;
+  var p = pAt;
+  var txt = "Ola Construminas! Gostaria de consultar o produto:\n\n*" + p.nome + "*";
+  if (p.cod) txt += "\nCod: " + p.cod;
+  txt += "\nCategoria: " + p.cat;
+  if (p.desc) txt += "\nDescricao: " + p.desc;
+  txt += "\n\nPode me passar mais informacoes e disponibilidade?";
+  window.open("https://wa.me/5531983497064?text=" + encodeURIComponent(txt), "_blank");
+}
+
+function toggleCart() {
+  if (!pAt) return;
+  toggleCartProd(pAt);
+  var noCart = carrinho.some(function(c) { return c.id === pAt.id; });
+  var mb = document.getElementById("mbtn-cart");
+  mb.textContent = noCart ? "Remover do Carrinho" : "Adicionar ao Carrinho";
+  mb.className = "mbtn-cart" + (noCart ? " added" : "");
+}
+
+function toggleCartProd(p) {
+  var idx = carrinho.findIndex(function(c) { return c.id === p.id; });
+  if (idx > -1) {
+    carrinho.splice(idx, 1);
+    toast("Removido do carrinho.");
+  } else {
+    carrinho.push({ id: p.id, nome: p.nome, cat: p.cat, cod: p.cod, unidade: p.unidade, fotos: p.fotos, qtd: 1 });
+    toast("Adicionado ao carrinho!");
+  }
+  atualizarCartUI();
+  render();
+}
+
+function atualizarCartUI() {
+  var total = carrinho.reduce(function(s, c) { return s + c.qtd; }, 0);
+  var badge = document.getElementById("cart-badge");
+  var floatN = document.getElementById("cart-float-n");
+  var floatBtn = document.getElementById("cart-float");
+  badge.textContent = total;
+  badge.className = "cart-badge" + (total > 0 ? " on" : "");
+  floatN.textContent = total + (total === 1 ? " item" : " itens");
+  floatBtn.className = "cart-float" + (total > 0 ? " on" : "");
+}
+
+function deletar() {
+  if (!adm || !pAt) return;
+  P = P.filter(function(p) { return p.id !== pAt.id; });
+  grav(); pAt = null;
+  document.getElementById("mov").classList.remove("on");
+  render(); toast("Produto removido.");
+}
+
+/* CARRINHO MODAL */
+function abrirCarrinho() {
+  renderCarrinho();
+  document.getElementById("cov").classList.add("on");
+}
+function fechaCov(e) {
+  if (e.target === document.getElementById("cov")) document.getElementById("cov").classList.remove("on");
+}
+
+function renderCarrinho() {
+  var body = document.getElementById("cart-body");
+  var hdrCnt = document.getElementById("cart-hdr-cnt");
+  body.innerHTML = "";
+  var total = carrinho.reduce(function(s, c) { return s + c.qtd; }, 0);
+  hdrCnt.textContent = total + (total === 1 ? " item" : " itens");
+  if (!carrinho.length) {
+    var emp = document.createElement("div"); emp.className = "cart-empty";
+    var ei = document.createElement("span"); ei.className = "cart-empty-ico"; ei.textContent = "🛒";
+    var ep = document.createElement("p"); ep.textContent = "Seu carrinho esta vazio. Adicione produtos!";
+    emp.appendChild(ei); emp.appendChild(ep); body.appendChild(emp);
+    return;
+  }
+  carrinho.forEach(function(item) {
+    var row = document.createElement("div"); row.className = "cart-item";
+    var th = document.createElement("div"); th.className = "cart-item-thumb";
+    var fotosItem = (item.fotos || []).filter(function(f) { return f; });
+    if (fotosItem.length > 0) {
+      var img = document.createElement("img"); img.src = fotosItem[0]; th.appendChild(img);
+    } else {
+      th.textContent = CICO[item.cat] || "📦";
+      th.style.background = "var(--az)";
+      th.style.color = "#fff";
+    }
+    var inf = document.createElement("div"); inf.className = "cart-item-info";
+    var nm = document.createElement("div"); nm.className = "cart-item-nome"; nm.textContent = item.nome;
+    var ct = document.createElement("div"); ct.className = "cart-item-cat"; ct.textContent = item.cat;
+    inf.appendChild(nm); inf.appendChild(ct);
+    if (item.cod) {
+      var cd = document.createElement("div"); cd.className = "cart-item-cod"; cd.textContent = "Cod: " + item.cod;
+      inf.appendChild(cd);
+    }
+    var qtdDiv = document.createElement("div"); qtdDiv.className = "qtd-ctrl";
+    var bMinus = document.createElement("button"); bMinus.className = "qtd-btn"; bMinus.textContent = "-";
+    var qtdVal = document.createElement("span"); qtdVal.className = "qtd-val"; qtdVal.textContent = item.qtd;
+    var bPlus = document.createElement("button"); bPlus.className = "qtd-btn"; bPlus.textContent = "+";
+    var itemId = item.id;
+    bMinus.onclick = function() {
+      var it = carrinho.find(function(c) { return c.id === itemId; });
+      if (!it) return;
+      if (it.qtd > 1) { it.qtd--; } else {
+        carrinho = carrinho.filter(function(c) { return c.id !== itemId; });
+        render();
+      }
+      atualizarCartUI(); renderCarrinho();
+    };
+    bPlus.onclick = function() {
+      var it = carrinho.find(function(c) { return c.id === itemId; });
+      if (it) { it.qtd++; atualizarCartUI(); renderCarrinho(); }
+    };
+    qtdDiv.appendChild(bMinus); qtdDiv.appendChild(qtdVal); qtdDiv.appendChild(bPlus);
+    inf.appendChild(qtdDiv);
+    var rmBtn = document.createElement("button"); rmBtn.className = "cart-item-rm"; rmBtn.textContent = "✕";
+    rmBtn.onclick = function() {
+      carrinho = carrinho.filter(function(c) { return c.id !== itemId; });
+      atualizarCartUI(); renderCarrinho(); render();
+    };
+    row.appendChild(th); row.appendChild(inf); row.appendChild(rmBtn);
+    body.appendChild(row);
+  });
+}
+
+function enviarWpp() {
+  if (!carrinho.length) { toast("Carrinho vazio!"); return; }
+  var obs = document.getElementById("cart-obs").value.trim();
+  var txt = "Ola Construminas! Gostaria de fazer um pedido:\n\n";
+  txt += "MINHA LISTA DE PEDIDO\n";
+  txt += "========================\n";
+  carrinho.forEach(function(item, i) {
+    txt += (i + 1) + ". " + item.nome;
+    if (item.cod) txt += " (Cod: " + item.cod + ")";
+    txt += " - Qtd: " + item.qtd + " " + (item.unidade || "un");
+    txt += "\n";
+  });
+  txt += "========================\n";
+  txt += "Total de itens: " + carrinho.length + " produto(s)\n";
+  if (obs) txt += "\nObservacao: " + obs + "\n";
+  txt += "\nAguardo retorno para combinamos!";
+  window.open("https://wa.me/5531983497064?text=" + encodeURIComponent(txt), "_blank");
+}
+
+/* PDF */
+function renderPDF() {
+  var w = document.getElementById("pprev"); w.innerHTML = "";
+  if (!P.length) {
+    var pp = document.createElement("p");
+    pp.style.cssText = "text-align:center;padding:20px;color:var(--c3);font-size:12px;font-weight:700";
+    pp.textContent = "Nenhum produto cadastrado."; w.appendChild(pp); return;
+  }
+  var cats = []; P.forEach(function(p) { if (cats.indexOf(p.cat) === -1) cats.push(p.cat); });
+  var info = document.createElement("p");
+  info.style.cssText = "font-size:12px;color:var(--c3);font-weight:700;padding:0 0 8px";
+  info.textContent = P.length + " produtos em " + cats.length + " categorias"; w.appendChild(info);
+  P.slice(0, 5).forEach(function(p) {
+    var rgb = CRGB[p.cat] || [55,65,81];
+    var item = document.createElement("div"); item.className = "pitem";
+    var th = document.createElement("div"); th.className = "pthumb";
+    th.style.background = "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+    var fProd = (p.fotos || []).filter(function(f) { return f; });
+    if (fProd.length > 0) {
+      var img = document.createElement("img"); img.src = fProd[0]; th.appendChild(img);
+    } else { th.textContent = CICO[p.cat] || "📦"; }
+    var inf = document.createElement("div"); inf.className = "pinfo";
+    var pn = document.createElement("div"); pn.className = "pnome"; pn.textContent = p.nome;
+    var pc = document.createElement("div"); pc.className = "pcat2";
+    pc.textContent = (p.cod ? "Cod " + p.cod + " - " : "") + p.cat;
+    inf.appendChild(pn); inf.appendChild(pc);
+    item.appendChild(th); item.appendChild(inf); w.appendChild(item);
+  });
+  if (P.length > 5) {
+    var more = document.createElement("p");
+    more.style.cssText = "text-align:center;padding:8px 0 0;font-size:11px;color:var(--c3);font-weight:700";
+    more.textContent = "+ mais " + (P.length - 5) + " no PDF"; w.appendChild(more);
+  }
+}
+
+function gerarPDF() {
+  if (!adm) { toast("Apenas o administrador pode gerar PDF."); return; }
+  if (!P.length) { toast("Sem produtos."); return; }
+  var btn = document.getElementById("bpdf"); btn.textContent = "Gerando..."; btn.disabled = true;
+  toast("Gerando PDF...");
+  setTimeout(function() {
+    try {
+      var doc = new jspdf.jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+      var W = 210, H = 297;
+      var cats = []; P.forEach(function(p) { if (cats.indexOf(p.cat) === -1) cats.push(p.cat); });
+      var hoje = new Date().toLocaleDateString("pt-BR");
+      doc.setFillColor(28,109,192); doc.rect(0,0,W,H,"F");
+      doc.setFillColor(240,90,40); doc.rect(0,0,W,18,"F"); doc.rect(0,0,8,H,"F"); doc.rect(W-8,0,8,H,"F");
+      doc.setFillColor(255,255,255); doc.circle(175,160,55,"F"); doc.setFillColor(28,109,192); doc.circle(175,160,48,"F");
+      doc.setFillColor(240,90,40); doc.roundedRect(82,55,18,18,2,2,"F");
+      doc.setFillColor(255,255,255); doc.triangle(91,58,84,65,98,65,"F"); doc.rect(86,65,10,8,"F");
+      doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(36); doc.text("Constru",82,100);
+      doc.setTextColor(240,90,40); doc.text("minas",122,100);
+      doc.setTextColor(200,225,255); doc.setFont("helvetica","normal"); doc.setFontSize(13);
+      doc.text("Construcao e Acabamento",82,110);
+      doc.setDrawColor(240,90,40); doc.setLineWidth(1); doc.line(82,116,W-20,116);
+      doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(22);
+      doc.text("CATALOGO DE PRODUTOS",82,130);
+      doc.setFontSize(12); doc.setTextColor(200,225,255); doc.setFont("helvetica","normal");
+      doc.text(P.length+" produtos em "+cats.length+" categorias",82,140);
+      doc.text("Emitido em "+hoje,82,150);
+      doc.setFillColor(14,79,148); doc.rect(0,H-40,W,40,"F"); doc.setFillColor(240,90,40); doc.rect(0,H-40,W,2,"F");
+      doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(11);
+      doc.text("Av. Gastao Demetrio Maia, 20 - Floramar - BH/MG",W/2,H-27,{align:"center"});
+      doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(180,210,240);
+      doc.text("(31) 98349-7064 | Seg-Sex 08h-18h | Sab 08h-13h | Dom Fechado",W/2,H-18,{align:"center"});
+      cats.forEach(function(cat) {
+        doc.addPage();
+        var prods = P.filter(function(p) { return p.cat === cat; });
+        var rgb = CRGB[cat] || [55,65,81];
+        doc.setFillColor(rgb[0],rgb[1],rgb[2]); doc.rect(0,0,W,28,"F");
+        doc.setFillColor(240,90,40); doc.rect(0,0,8,28,"F");
+        doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(16);
+        doc.text(cat.toUpperCase(),16,12);
+        doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(220,235,255);
+        doc.text(prods.length+" produto(s)",16,20);
+        doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(255,255,255);
+        doc.text("Constru",W-50,12); doc.setTextColor(240,90,40); doc.text("minas",W-27,12);
+        var y=36, col=0, cW=(W-24)/2;
+        prods.forEach(function(p,i) {
+          var x = 12+col*(cW+4);
+          doc.setFillColor(255,255,255); doc.roundedRect(x,y,cW,60,3,3,"F");
+          doc.setDrawColor(220,228,237); doc.setLineWidth(0.3); doc.roundedRect(x,y,cW,60,3,3,"S");
+          var fp = (p.fotos||[]).filter(function(f){return f;});
+          if (fp.length > 0) { try { doc.addImage(fp[0],"JPEG",x,y,cW,22); } catch(e2) {} }
+          else { doc.setFillColor(rgb[0],rgb[1],rgb[2]); doc.roundedRect(x,y,cW,14,3,3,"F"); doc.rect(x,y+8,cW,6,"F"); }
+          doc.setFillColor(rgb[0],rgb[1],rgb[2]); if(fp.length>0){doc.rect(x,y,cW,7,"F");}
+          doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(6.5); doc.text(cat,x+3,y+5);
+          if(p.cod){doc.setFont("helvetica","normal");doc.setFontSize(6);doc.text("Cod:"+p.cod,x+cW-20,y+5);}
+          var yc = fp.length>0?y+25:y+18;
+          doc.setTextColor(22,32,53); doc.setFont("helvetica","bold"); doc.setFontSize(8.5);
+          var nl=doc.splitTextToSize(p.nome,cW-7); doc.text(nl.slice(0,2),x+3.5,yc); yc+=nl.length>1?8:5;
+          if(p.desc){doc.setFont("helvetica","normal");doc.setFontSize(6.5);doc.setTextColor(138,150,173);doc.text(doc.splitTextToSize(p.desc,cW-7).slice(0,2),x+3.5,yc);}
+          var ecM={"dv":[29,185,84],"dl":[243,156,18],"ds":[59,130,246],"di":[229,57,53]};
+          var ev=ecM[p.estoque]||[29,185,84]; doc.setFillColor(ev[0],ev[1],ev[2]); doc.circle(x+cW-5,y+55,2.5,"F");
+          col++; if(col===2){col=0;y+=66;}
+          if(y>H-72&&i<prods.length-1){
+            doc.addPage();
+            doc.setFillColor(rgb[0],rgb[1],rgb[2]); doc.rect(0,0,W,14,"F");
+            doc.setFillColor(240,90,40); doc.rect(0,0,8,14,"F");
+            doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(11);
+            doc.text(cat.toUpperCase()+" (cont.)",16,9); y=22; col=0;
+          }
+        });
+        doc.setFillColor(14,79,148); doc.rect(0,H-12,W,12,"F");
+        doc.setTextColor(180,210,240); doc.setFont("helvetica","normal"); doc.setFontSize(8);
+        doc.text("Construminas | (31) 98349-7064 | Floramar BH/MG",W/2,H-5,{align:"center"});
+      });
+      doc.save("catalogo_construminas.pdf");
+      toast("PDF gerado com sucesso!");
+    } catch(err) { toast("Erro ao gerar PDF."); console.error(err); }
+    btn.textContent = "Baixar PDF do Catalogo"; btn.disabled = false;
+  }, 400);
+}
+
+document.getElementById("btn-adm").style.display = "flex";
+render();
+</script>
+</body>
+</html>
